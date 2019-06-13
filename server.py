@@ -5,7 +5,6 @@ import re
 import base64
 import numpy as np
 from PIL import Image
-import cv2
 from werkzeug import secure_filename
 import keras
 from keras.models import load_model
@@ -38,13 +37,11 @@ def convertImage(imgData1):
 def find():
 	imgData = request.get_data()
 	convertImage(imgData)
-	img =  cv2.imread('test/out.png',0)
-	emg = Image.open('test/out.png')
-	print(img.shape)
+	img = Image.open('test/out.png')
+	img = img.resize((28,28)).convert('LA')
+	img = np.asarray(img)[:,:,:1]
 	img = np.invert(img)
-	img = cv2.resize(img, (28,28), cv2.INTER_AREA)
-	print(img.shape)
-	#cv2.imwrite('test/save1.png',img)
+	#print(img.shape)
 	img = img/ 255
 	img = np.reshape(img,(1,28,28,1))
 	
